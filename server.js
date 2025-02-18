@@ -18,10 +18,7 @@ app.use(express.json());
 // MongoDB connection string with database name
 const MONGO_URI = "mongodb+srv://tugofwar_db:tugofwar@cluster0.4obgs.mongodb.net/tugofwar_db?retryWrites=true&w=majority&appName=Cluster0";
 
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(MONGO_URI)
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
