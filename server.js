@@ -17,7 +17,7 @@ app.use(express.json());
 
 // Set up session management
 app.use(session({
-  secret: 'your-secret-key', // Replace with your own secret string
+  secret: 'secret123', // Replace with your own secret string
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }, // Change to true in production with HTTPS

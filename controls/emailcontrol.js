@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const User = require("../models/usermodel");
-const transporter = require("../config/emailConfig");
+const transporter = require("../config/emailconfig");
 
 let emailTokens = {};
 
