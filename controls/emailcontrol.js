@@ -10,7 +10,7 @@ exports.loginUser = async (req, res) => {
   const token = crypto.randomBytes(20).toString("hex");
   emailTokens[token] = { name, email, confirmed: false };
 
-  const confirmationUrl = `http://localhost:6001/confirm/${token}`;
+  const confirmationUrl = `https://tugofwar-server.onrender.com/confirm/${token}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
