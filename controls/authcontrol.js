@@ -2,8 +2,6 @@ const crypto = require("crypto");
 const User = require("../models/usermodel");
 const transporter = require("../config/emailconfig"); // Assuming Nodemailer config is in emailconfig.js
 
-let emailTokens = {}; // Temporary storage for tokens
-
 // Handle user login and send email confirmation
 const loginUser = async (req, res) => {
   const { name, email } = req.body;
@@ -17,11 +15,13 @@ const loginUser = async (req, res) => {
 
     if (!user) {
       console.log(`Creating new user: ${name} (${email})`);
-      user = new User({id: user._id,
-        name: user.name,
-        email: user.email,
-        confirmed: user.confirmed}); // Set confirmed to false initially
-      await user.save();
+      // Since the user was not found, create a new user object
+      user = new User({
+        name: name,
+        email: email,
+        confirmed: false, // Set confirmed to false initially
+      });
+      await user.save(); // Save the new user to the database
       console.log(`New user saved: ${user}`);
     }
 
@@ -60,34 +60,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Handle email confirmation
-const confirmEmail = async (req, res) => {
-  const token = req.params.token;
-
-  try {
-    // Find user with the confirmation token
-    const user = await User.findOne({ confirmationToken: token, confirmationTokenExpiration: { $gt: Date.now() } });
-
-    if (!user) {
-      return res.status(400).send("Invalid or expired token.");
-    }
-
-    // Mark the user as confirmed
-    user.confirmed = true;
-    user.confirmationToken = null; // Clear the token
-    user.confirmationTokenExpiration = null; // Clear the expiration date
-
-    await user.save(); // Save the updated user
-
-    res.status(200).send("Email confirmed. You can now comment.");
-
-  } catch (err) {
-    console.error("Error confirming email:", err);
-    res.status(500).send("There was an error confirming your email.");
-  }
-};
-
 module.exports = {
   loginUser,
-  confirmEmail,
 };
