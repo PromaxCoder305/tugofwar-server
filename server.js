@@ -2,11 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoStore = require('connect-mongo'); // Import connect-mongo
 const router = require('./routes/authrouter');
 const contentRoutes = require('./routes/contentrouter');
 const videoRoutes = require('./routes/videorouter');
-const commentroutes = require('./routes/commentrouter');
-
+const commentRoutes = require('./routes/commentrouter');
 const path = require('path');
 
 const app = express();
@@ -15,12 +15,26 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// MongoDB connection string with database name
+const MONGO_URI = "mongodb+srv://tugofwar_db:tugofwar@cluster0.4obgs.mongodb.net/tugofwar_db?retryWrites=true&w=majority&appName=Cluster0";
+
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
 // Set up session management
 app.use(session({
-  secret: 'secret123', // Replace with your own secret string
+  secret: 'secret123', // Replace with a strong secret
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }, // Change to true in production with HTTPS
+  saveUninitialized: false, // Recommended to avoid unnecessary sessions
+  store: MongoStore.create({
+    mongoUrl: MONGO_URI, // Use the same MongoDB connection string
+    ttl: 24 * 60 * 60, // Session expiration (1 day)
+  }),
+  cookie: { maxAge: 1000 * 60 * 60 * 24, secure: false }, // Set secure: true in production with HTTPS
 }));
 
 // Serve uploaded images statically
@@ -30,12 +44,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', router);
 app.use('/content', contentRoutes);
 app.use('/videos', videoRoutes);
-app.use('/comments', commentroutes);
-
-// MongoDB connection
-mongoose.connect("mongodb+srv://tugofwar_db:tugofwar@cluster0.4obgs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
-  
-});
+app.use('/comments', commentRoutes);
 
 const PORT = 6001;
 app.listen(PORT, () => {
