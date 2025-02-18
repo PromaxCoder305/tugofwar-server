@@ -34,8 +34,7 @@ app.use('/comments', commentroutes);
 
 // MongoDB connection
 mongoose.connect("mongodb+srv://tugofwar_db:tugofwar@cluster0.4obgs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  
 });
 
 const PORT = 6001;
