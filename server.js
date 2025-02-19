@@ -12,7 +12,11 @@ const path = require('path');
 const app = express();
 
 // Enable CORS and JSON parsing
-app.use(cors());
+app.use(cors({
+  origin: "https://tugofwar-client.onrender.com",  // Allow only your frontend
+  methods: "GET,POST,PUT,DELETE", 
+  allowedHeaders: "Content-Type,Authorization"
+}));
 app.use(express.json());
 
 // MongoDB connection string with database name
