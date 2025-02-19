@@ -33,7 +33,7 @@ const loginUser = async (req, res) => {
     await user.save(); // Save the user with the confirmation token
 
     // Create a confirmation URL
-    const confirmationUrl = `http://localhost:6001/confirm-email/${confirmationToken}`;
+    const confirmationUrl = `https://tugofwar-client.onrender.com/confirm-email/${confirmationToken}`;
 
     // Prepare the email
     const mailOptions = {
