@@ -1,13 +1,23 @@
 const multer = require("multer");
-const path = require("path");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinaryConfig"); // Import Cloudinary configuration
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads"); 
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
-    cb(null, uniqueName);
+// Function to get current time in HH-MM-SS format
+const getCurrentTime = () => {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  return `${hours}-${minutes}-${seconds}`;
+};
+
+// Configure Cloudinary storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "uploads", // Change to your desired Cloudinary folder
+    format: async (req, file) => "png", // Convert all images to PNG (or keep original format)
+    public_id: (req, file) => `${getCurrentTime()}-${file.originalname.split(".")[0]}`, // Filename based on time
   },
 });
 

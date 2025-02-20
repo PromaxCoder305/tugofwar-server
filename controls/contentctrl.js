@@ -9,7 +9,8 @@ const addContent = async (req, res) => {
       return res.status(400).json({ error: "All fields are required ." });
     }
 
-    const newContent = new Content({ title, subTitle,description, district, date, image, youtubeLink });
+    const imageUrl = req.file.path;
+    const newContent = new Content({ title, subTitle,description, district, date, image:imageUrl });
     await newContent.save();
 
     res.status(201).json({ message: "Content added successfully!", content: newContent });
