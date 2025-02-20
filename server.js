@@ -7,6 +7,8 @@ const router = require('./routes/authrouter');
 const contentRoutes = require('./routes/contentrouter');
 const videoRoutes = require('./routes/videorouter');
 const commentRoutes = require('./routes/commentrouter');
+const cloudinaryroutes = require('./routes/cloudinaryrouter')
+
 const path = require('path');
 
 const app = express();
@@ -46,6 +48,8 @@ app.use('/api', router);
 app.use('/content', contentRoutes);
 app.use('/videos', videoRoutes);
 app.use('/comments', commentRoutes);
+app.use('/cloudinary',cloudinaryroutes);
+
 
 const PORT = process.env.PORT || 6001;
 app.listen(PORT, '0.0.0.0', () => {
